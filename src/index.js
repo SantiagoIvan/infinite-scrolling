@@ -1,4 +1,14 @@
-const imageApi = 'https://random.imagecdn.app/200/200' // como no hay fotos de los lugares, uso esto y fue
+const images = [
+    'https://random.imagecdn.app/200/200',
+    'https://imago-mc.com/wp-content/uploads/2016/10/chrome-logo-200x200.png',
+    'https://tdj.gg/uploads/attachs/90430_66956401-BCC3-40B6-B951-32503B0895DE.png',
+    'https://displaypt.com/wp-content/uploads/2018/10/TEAM-200x200.png',
+    'https://cn.i.cdn.ti-platform.com/content/343/showpage/historias-corrientes/es/regularshow-200x200.png',
+    'https://placekitten.com/200/200',
+    'https://placekitten.com/406/406',
+    'https://placekitten.com/407/407',
+] // como no hay fotos de los lugares de la api que uso, uso esto y fue. Lo unico que queria era hacer el lazy loading
+
 const locationApi = 'https://rickandmortyapi.com/api/location?page='
 let next = locationApi + '1'
 // concatenar el nro de pagina. El tamaño de pagina es de 20 unidades
@@ -61,12 +71,13 @@ const createCard = (cardInfo) => {
     const card = document.createElement('div')
     card.classList.add('card')
     card.id = `card-${cardInfo.id}`
-
+    const rnd = Math.floor(Math.random() * images.length)
+    console.log(rnd)
     card.innerHTML = `
         <h4 class='card-title'>${cardInfo.name}</h4>
         <h5 class='card-subtitle'>${cardInfo.dimension}</h6>
         <div class='image-container'>
-            <img src='${imageApi}' loading='lazy'/>
+            <img src='${images[rnd]}' loading='lazy' alt="foto falopa"/>
         </div>
         <div class='card-description'>
             <p>${`Type: ${cardInfo.type}`}</p>

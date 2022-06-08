@@ -1,0 +1,22 @@
+body {
+    background-image: url('background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: rgb(41, 172, 41);
+    font-family: 'Prompt', sans-serif;
+}
+
+.main-title {
+    text-align: center;
+    font-size: 4rem;
+    font-weight: bolder;
+}
+
+.cards-container { 
+    border: 2px solid black;
+}
+
+.request-target {
+    text-align: center;
+    font-style: italic;
+}

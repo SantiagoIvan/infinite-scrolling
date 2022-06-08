@@ -66,11 +66,3 @@ body {
     text-align: center;
     font-style: italic;
 }
-
-.show {
-    display: block;
-}
-
-.hide {
-    visibility: hidden;
-}

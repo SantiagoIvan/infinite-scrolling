@@ -54,32 +54,13 @@ const renderResults = (results) => {
     results.forEach((result) => {
         const card = createCard(result)
         cardsContainer.appendChild(card)
-
-        // creo el observer para esconder el elemento cuando no esta
-        const cardOptions = {
-            threshold: 0.2,
-        }
-        const onCardIntersect = ([entry]) => {
-            if (entry.isIntersecting) {
-                entry.target.classList.remove('hide')
-                entry.target.classList.add('show')
-            } else {
-                entry.target.classList.remove('show')
-                entry.target.classList.add('hide')
-            }
-        }
-
-        let cardObserver = new IntersectionObserver(
-            onCardIntersect,
-            cardOptions
-        )
-        cardObserver.observe(card)
     })
 }
 
 const createCard = (cardInfo) => {
     const card = document.createElement('div')
     card.classList.add('card')
+    card.id = `card-${cardInfo.id}`
 
     card.innerHTML = `
         <h4 class='card-title'>${cardInfo.name}</h4>

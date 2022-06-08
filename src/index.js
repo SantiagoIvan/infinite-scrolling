@@ -1,5 +1,6 @@
-const imageApi = 'https://random.imagecdn.app/250/250' // como no hay fotos de los lugares, uso esto y fue
+const imageApi = 'https://random.imagecdn.app/200/200' // como no hay fotos de los lugares, uso esto y fue
 const locationApi = 'https://rickandmortyapi.com/api/location?page='
+let next = locationApi + '1'
 // concatenar el nro de pagina. El tamaño de pagina es de 20 unidades
 
 // capturo mis elementos
@@ -10,30 +11,89 @@ const cardsContainer = document.getElementById('cards-container')
 let loading = false
 let page = 1
 
-/* OBSERVER */
+/* OBSERVER para el SCROLLING */
 
 // options
-const options = {
+const scrollingOptions = {
     thresgold: 1, // cuando se vea la totalidad del elemento observado
 }
 
 // callback
 // como cuando carga la pagina, no va a haber cartitas, intersectará y me va a llenar con datos la pagina
-const onIntersect = (entry) => {
-    console.log('Intersecte')
-    loadData()
+const onScrollToBottom = ([entry]) => {
+    // recibo un array de entries, el primero es la ultima interseccion del elemento observado
+    if (!loading && entry.isIntersecting && next) {
+        loadData()
+    }
 }
 
-let observer = new IntersectionObserver(onIntersect, options)
+let scrollObserver = new IntersectionObserver(
+    onScrollToBottom,
+    scrollingOptions
+)
 
-observer.observe(requestTarget)
+scrollObserver.observe(requestTarget)
 
+/** Load next cards */
 const loadData = async () => {
     try {
         loading = true
+        const response = await fetch(next)
+        const data = await response.json()
+
+        next = data.info.next
+        renderResults(data.results)
     } catch (error) {
         console.log('Error en loadData', error)
     } finally {
         loading = false
     }
+}
+
+const renderResults = (results) => {
+    results.forEach((result) => {
+        const card = createCard(result)
+        cardsContainer.appendChild(card)
+
+        // creo el observer para esconder el elemento cuando no esta
+        const cardOptions = {
+            thresgold: 0.75,
+        }
+        const onCardIntersect = (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    console.log('Interseca')
+                    entry.target.classList.remove('hide')
+                    entry.target.classList.add('show')
+                } else {
+                    entry.target.classList.remove('show')
+                    entry.target.classList.add('hide')
+                }
+            })
+        }
+
+        let cardObserver = new IntersectionObserver(
+            onCardIntersect,
+            cardOptions
+        )
+        cardObserver.observe(card)
+    })
+}
+
+const createCard = (cardInfo) => {
+    const card = document.createElement('div')
+    card.classList.add('card')
+
+    card.innerHTML = `
+        <h4 class='card-title'>${cardInfo.name}</h4>
+        <h5 class='card-subtitle'>${cardInfo.dimension}</h6>
+        <div class='image-container'>
+            <img src='${imageApi}'/>
+        </div>
+        <div class='card-description'>
+            <p>${`Type: ${cardInfo.type}`}</p>
+            <p>${`Population: ${cardInfo.residents.length}`}</p>
+        </div>
+    `
+    return card
 }

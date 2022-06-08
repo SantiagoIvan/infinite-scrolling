@@ -57,19 +57,16 @@ const renderResults = (results) => {
 
         // creo el observer para esconder el elemento cuando no esta
         const cardOptions = {
-            thresgold: 0.75,
+            threshold: 0.2,
         }
-        const onCardIntersect = (entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    console.log('Interseca')
-                    entry.target.classList.remove('hide')
-                    entry.target.classList.add('show')
-                } else {
-                    entry.target.classList.remove('show')
-                    entry.target.classList.add('hide')
-                }
-            })
+        const onCardIntersect = ([entry]) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.remove('hide')
+                entry.target.classList.add('show')
+            } else {
+                entry.target.classList.remove('show')
+                entry.target.classList.add('hide')
+            }
         }
 
         let cardObserver = new IntersectionObserver(
@@ -88,7 +85,7 @@ const createCard = (cardInfo) => {
         <h4 class='card-title'>${cardInfo.name}</h4>
         <h5 class='card-subtitle'>${cardInfo.dimension}</h6>
         <div class='image-container'>
-            <img src='${imageApi}'/>
+            <img src='${imageApi}' loading='lazy'/>
         </div>
         <div class='card-description'>
             <p>${`Type: ${cardInfo.type}`}</p>
